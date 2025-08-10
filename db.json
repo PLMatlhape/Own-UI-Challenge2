@@ -1,0 +1,58 @@
+{
+  "users": [
+    {
+      "id": "1",
+      "username": "demo",
+      "password": "demo123"
+    },
+    {
+      "id": "1754864069824",
+      "username": "Pule@ownui.com",
+      "password": "Pule@123"
+    }
+  ],
+  "jobs": [
+    {
+      "id": "1",
+      "userId": "1",
+      "companyName": "Tech Corp",
+      "role": "Frontend Developer",
+      "status": "Applied",
+      "dateApplied": "2025-01-01",
+      "description": "Exciting frontend role with React and TypeScript",
+      "requirements": "3+ years React experience",
+      "duties": "Build user interfaces, collaborate with design team",
+      "contactDetails": "hr@techcorp.com",
+      "address": "123 Tech Street, Digital City",
+      "notes": "Great company culture"
+    },
+    {
+      "id": "2",
+      "userId": "1",
+      "companyName": "StartupXYZ",
+      "role": "Full Stack Developer",
+      "status": "Pending",
+      "dateApplied": "2025-01-05",
+      "description": "Full stack role with modern tech stack",
+      "requirements": "Node.js, React, MongoDB",
+      "duties": "End-to-end development",
+      "contactDetails": "jobs@startupxyz.com",
+      "address": "456 Innovation Ave",
+      "notes": "Fast-growing startup"
+    },
+    {
+      "id": "1754864079665",
+      "companyName": "CodeTribe",
+      "role": "Junior-Dev",
+      "status": "Applied",
+      "dateApplied": "2025-08-10",
+      "description": "",
+      "requirements": "",
+      "duties": "",
+      "contactDetails": "",
+      "address": "",
+      "notes": "",
+      "userId": "1754864069824"
+    }
+  ]
+}

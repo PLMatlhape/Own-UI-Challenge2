@@ -1,5 +1,6 @@
 export interface Job {
   id: string;
+  userId: string;
   companyName: string;
   role: string;
   status: 'Applied' | 'Pending' | 'Rejected';
