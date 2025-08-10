@@ -1,4 +1,4 @@
-/* Modern Dashboard Styles - Matching Login & Landing Page */
+
 .dashboard {
   min-height: 100vh;
   position: relative;
@@ -6,7 +6,7 @@
   padding: 0;
 }
 
-/* Background with floating shapes */
+
 .dashboard-background {
   position: fixed;
   top: 0;
@@ -109,7 +109,7 @@
   z-index: 1;
 }
 
-/* Header Section */
+
 .dashboard-header {
   padding: 2rem 2rem 1rem;
   margin-bottom: 1rem;
@@ -188,7 +188,7 @@
   font-size: 1.2rem;
 }
 
-/* Stats Section */
+
 .stats-section {
   padding: 0 2rem 2rem;
   margin-bottom: 1rem;
@@ -320,7 +320,7 @@
   opacity: 0.8;
 }
 
-/* Search Section */
+
 .search-section {
   padding: 0 2rem 2rem;
   animation: slideUp 0.8s ease-out 0.4s both;
@@ -403,11 +403,12 @@
   box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
 }
 
-/* Jobs Section */
+
 .jobs-section {
   padding: 0 2rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
+  background-color: var(--color-background);
   animation: slideUp 0.8s ease-out 0.6s both;
 }
 
@@ -459,6 +460,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
   gap: 2rem;
+  background-color: var(--color-background);
+  padding: 0;
 }
 
 .job-card {
@@ -545,6 +548,7 @@
 
 .job-actions {
   flex-shrink: 0;
+  background-color: rgba(15, 15, 35, 0.8);
 }
 
 .job-status {
@@ -672,7 +676,7 @@
   transform: scale(1.05) !important;
 }
 
-/* Modal Styles */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -821,7 +825,7 @@
   transform: scale(1.1);
 }
 
-/* Form Styles */
+
 .job-form {
   padding: 2rem;
   position: relative;
@@ -951,7 +955,7 @@
   box-shadow: 0 8px 25px 0 rgba(99, 102, 241, 0.4) !important;
 }
 
-/* Responsive Design */
+
 @media (max-width: 1024px) {
   .dashboard {
     padding: 0;
@@ -1105,7 +1109,7 @@
   opacity: 0.9;
 }
 
-/* Dashboard Content Layout */
+
 .dashboard-content {
   display: grid;
   grid-template-columns: 1fr 300px;
@@ -1144,7 +1148,7 @@
   border-radius: 8px !important;
 }
 
-/* Search Bar */
+
 .search-bar {
   margin-bottom: 1.5rem;
 }
@@ -1170,7 +1174,7 @@
   color: var(--color-text-muted);
 }
 
-/* Filter Buttons */
+
 .filter-buttons {
   display: flex;
   gap: 0.5rem;
@@ -1207,7 +1211,7 @@
   box-shadow: 0 4px 16px rgba(99, 102, 241, 0.4);
 }
 
-/* Job List */
+
 .job-list {
   display: flex;
   flex-direction: column;
@@ -1275,6 +1279,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  background-color: rgba(15, 15, 35, 0.8);
 }
 
 .job-status {
@@ -1364,7 +1369,7 @@
   box-shadow: 0 2px 8px rgba(244, 63, 94, 0.3);
 }
 
-/* Enhanced clickable button styles */
+
 .status-clickable.status-applied {
   border-color: rgba(245, 158, 11, 0.7);
 }
@@ -1401,7 +1406,7 @@
   color: var(--color-text-muted);
 }
 
-/* Sidebar */
+
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -1429,7 +1434,7 @@
   color: var(--color-text);
 }
 
-/* Quick Actions */
+
 .quick-actions {
   display: flex;
   flex-direction: column;
@@ -1457,7 +1462,7 @@
   box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
 }
 
-/* Recent Activity */
+
 .activity-list {
   display: flex;
   flex-direction: column;
@@ -1493,7 +1498,7 @@
   padding: 1rem;
 }
 
-/* Modal Styles */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1548,7 +1553,7 @@
   color: var(--color-text);
 }
 
-/* Add Form */
+
 .add-form {
   padding: 2rem;
 }
@@ -1606,7 +1611,7 @@
   border-top: 1px solid rgba(68, 68, 68, 0.2);
 }
 
-/* Responsive Design */
+
 @media (max-width: 1024px) {
   .dashboard-content {
     grid-template-columns: 1fr;
@@ -1687,7 +1692,7 @@
   }
 }
 
-/* Analytics Modal Styles */
+
 .analytics-modal {
   max-width: 900px;
   width: 95vw;
@@ -1808,7 +1813,7 @@
   color: var(--color-primary-light);
 }
 
-/* Export Modal Styles */
+
 .export-modal {
   max-width: 500px;
   width: 90vw;
@@ -1877,7 +1882,7 @@
   line-height: 1.4;
 }
 
-/* Job Cards and Content Styles */
+
 .main-content {
   margin-top: 2rem;
 }
@@ -2065,7 +2070,7 @@
   font-size: var(--font-size-lg) !important;
 }
 
-/* Search Section */
+
 .search-section {
   display: flex;
   align-items: center;
@@ -2123,7 +2128,7 @@
   font-weight: 600;
 }
 
-/* Modal Styles */
+
 .modal-overlay {
   position: fixed;
   top: 0;

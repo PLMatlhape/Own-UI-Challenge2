@@ -1,4 +1,4 @@
-/* Keyframe animations */
+
 @keyframes jobCardSlideIn {
   from {
     opacity: 0;
@@ -225,13 +225,14 @@
   flex-wrap: wrap;
   padding-top: 1rem;
   border-top: 1px solid rgba(148, 163, 184, 0.1);
+  background-color: rgba(15, 15, 35, 0.8);
 }
 
 .job-card-actions a {
   text-decoration: none;
 }
 
-/* Responsive Design */
+
 @media (max-width: 320px) {
   .job-card {
     padding: 1rem;

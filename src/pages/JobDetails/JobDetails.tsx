@@ -1,24 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Text, Button } from '../../index';
-import type { Job } from '../../index';
+import type { Job, User } from '../../index';
 import './JobDetails.css';
 
-const JobDetails: React.FC = () => {
+interface JobDetailsProps {
+  user: User | null;
+}
+
+const JobDetails: React.FC<JobDetailsProps> = ({ user }) => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedJobs = localStorage.getItem('jobTracker_jobs');
-    if (storedJobs && id) {
-      const jobs: Job[] = JSON.parse(storedJobs);
-      const foundJob = jobs.find(j => j.id === id);
-      setJob(foundJob || null);
+    if (user?.id) {
+      const storedJobs = localStorage.getItem(`jobTracker_jobs_${user.id}`);
+      if (storedJobs && id) {
+        const jobs: Job[] = JSON.parse(storedJobs);
+        const foundJob = jobs.find(j => j.id === id);
+        setJob(foundJob || null);
+      }
     }
     setLoading(false);
-  }, [id]);
+  }, [id, user]);
 
   const getStatusClass = (status: string) => {
     return `status-${status.toLowerCase().replace(/\s+/g, '-')}`;
