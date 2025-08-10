@@ -21,10 +21,10 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     setLoading(true);
 
     try {
-      // Simulate API call
+      
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Simple validation - in real app, this would be API call
+      
       const storedUsers = JSON.parse(localStorage.getItem('jobTracker_users') || '[]');
       const user = storedUsers.find((u: User) => u.username === username && u.password === password);
       

@@ -159,17 +159,17 @@ const Landing: React.FC = () => {
             <div className="feature-card card-accent">
               <div className="card-glow"></div>
               <div className="card-content">
-                <div className="feature-icon icon-large">�</div>
+                <div className="feature-icon icon-large">📊</div>
                 <Text variant="h3" className="feature-title">Deep Analytics</Text>
                 <Text className="feature-description">
                   Understand your job search patterns with detailed analytics and performance metrics.
                 </Text>
                 <div className="analytics-preview">
                   <div className="chart-bars">
-                    <div className="bar" style={{height: '60%'}}></div>
-                    <div className="bar" style={{height: '80%'}}></div>
-                    <div className="bar" style={{height: '45%'}}></div>
-                    <div className="bar" style={{height: '90%'}}></div>
+                    <div className="bar bar-1"></div>
+                    <div className="bar bar-2"></div>
+                    <div className="bar bar-3"></div>
+                    <div className="bar bar-4"></div>
                   </div>
                 </div>
               </div>
@@ -260,7 +260,7 @@ const Landing: React.FC = () => {
             
             <div className="cta-actions">
               <Link to="/register">
-                <Button variant="primary" size="xl" className="cta-main">
+                <Button variant="primary" size="lg" className="cta-main">
                   🎯 Get Started - It's Free
                 </Button>
               </Link>

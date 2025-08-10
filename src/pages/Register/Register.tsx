@@ -22,7 +22,7 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
     setLoading(true);
 
     try {
-      // Validation
+      
       if (password !== confirmPassword) {
         setError('Passwords do not match');
         return;
@@ -33,10 +33,10 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
         return;
       }
 
-      // Simulate API call
+      
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Check if user already exists
+      
       const storedUsers = JSON.parse(localStorage.getItem('jobTracker_users') || '[]');
       const existingUser = storedUsers.find((u: User) => u.username === username);
       
@@ -45,14 +45,14 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
         return;
       }
 
-      // Create new user
+      
       const newUser: User = {
         id: Date.now().toString(),
         username,
         password
       };
 
-      // Store user
+      
       const updatedUsers = [...storedUsers, newUser];
       localStorage.setItem('jobTracker_users', JSON.stringify(updatedUsers));
       

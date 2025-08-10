@@ -1,11 +1,11 @@
-/* Modern Login Page Styles - Matching Landing Page */
+
 .login-page {
   min-height: 100vh;
   position: relative;
   overflow: hidden;
 }
 
-/* Background with floating shapes */
+
 .login-background {
   position: absolute;
   top: 0;
@@ -85,7 +85,7 @@
   }
 }
 
-/* Main container */
+
 .login-container {
   position: relative;
   z-index: 2;
@@ -105,7 +105,7 @@
   align-items: center;
 }
 
-/* Welcome Section (Left Side) */
+
 .welcome-section {
   padding: 2rem 0;
 }
@@ -185,7 +185,7 @@
   background: rgba(148, 163, 184, 0.2);
 }
 
-/* Form Section (Right Side) */
+
 .form-section {
   display: flex;
   justify-content: center;
@@ -224,7 +224,7 @@
   line-height: 1.5;
 }
 
-/* Form Styles */
+
 .login-form {
   width: 100%;
 }
@@ -275,7 +275,7 @@
   opacity: 0.6;
 }
 
-/* Error Styles */
+
 .form-error {
   display: flex;
   align-items: center;
@@ -305,7 +305,7 @@
   font-weight: 500;
 }
 
-/* Button Styles */
+
 .login-button {
   margin-bottom: 2rem;
   background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%) !important;
@@ -329,7 +329,7 @@
   cursor: not-allowed !important;
 }
 
-/* Footer Styles */
+
 .form-footer {
   text-align: center;
 }
@@ -358,7 +358,7 @@
   text-decoration: underline;
 }
 
-/* Responsive Design */
+
 @media (max-width: 1024px) {
   .login-content {
     grid-template-columns: 1fr;

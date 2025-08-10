@@ -1,10 +1,10 @@
-/* Modern Landing Page Styles */
+
 .landing-page {
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-/* Floating Hero Section */
+
 .floating-hero {
   min-height: 100vh;
   position: relative;
@@ -214,7 +214,7 @@
   border-color: rgba(255, 255, 255, 0.5) !important;
 }
 
-/* Dashboard Preview */
+
 .hero-right {
   perspective: 1000px;
 }
@@ -351,7 +351,7 @@
   border: 1px solid rgba(245, 158, 11, 0.3);
 }
 
-/* Features Showcase */
+
 .features-showcase {
   padding: 8rem 0;
   background: linear-gradient(180deg, #0f0f23 0%, #1a1a2e 100%);
@@ -558,12 +558,28 @@
   animation: barGrow 2s ease-in-out infinite;
 }
 
+.bar-1 {
+  height: 60%;
+}
+
+.bar-2 {
+  height: 80%;
+}
+
+.bar-3 {
+  height: 45%;
+}
+
+.bar-4 {
+  height: 90%;
+}
+
 @keyframes barGrow {
   0%, 100% { transform: scaleY(1); }
   50% { transform: scaleY(1.1); }
 }
 
-/* Testimonials Section */
+
 .testimonials-section {
   padding: 8rem 0;
   background: linear-gradient(180deg, #1a1a2e 0%, #0f0f23 100%);
@@ -641,7 +657,7 @@
   color: rgba(255, 255, 255, 0.6);
 }
 
-/* Final CTA Section */
+
 .final-cta {
   padding: 8rem 0;
   background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
@@ -789,7 +805,7 @@
   font-size: 1rem;
 }
 
-/* Responsive Design */
+
 @media (max-width: 1024px) {
   .hero-container {
     grid-template-columns: 1fr;

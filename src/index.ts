@@ -9,7 +9,7 @@ export { default as Home } from './pages/Home/Home';
 export { default as JobDetails } from './pages/JobDetails/JobDetails';
 export { default as Landing } from './pages/Landing/Landing';
 export { default as Login } from './pages/Login/Login';
-export { default as NotFound } from './pages/NotFound/NotFound';
+export { default as ErrorPage } from './pages/ErrorPage/ErrorPage';
 export { default as Register } from './pages/Register/Register';
 
 // Types

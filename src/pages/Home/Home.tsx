@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { Text, Button } from '../../index';
-import type { Job } from '../../index';
+import type { Job, User } from '../../index';
 import './Home.css';
 
-const Home: React.FC = () => {
+interface HomeProps {
+  user: User | null;
+}
+
+const Home: React.FC<HomeProps> = ({ user }) => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [showAddForm, setShowAddForm] = useState(false);
 
-  // Form state
+  
   const [formData, setFormData] = useState({
     companyName: '',
     role: '',
@@ -23,7 +27,7 @@ const Home: React.FC = () => {
     notes: ''
   });
 
-  // Calculate stats
+  
   const stats = {
     totalApplied: jobs.length,
     pending: jobs.filter(job => job.status === 'Pending').length,
@@ -31,26 +35,30 @@ const Home: React.FC = () => {
     rejected: jobs.filter(job => job.status === 'Rejected').length
   };
 
-  // Load jobs from localStorage
+  
   useEffect(() => {
-    const storedJobs = localStorage.getItem('jobTracker_jobs');
-    if (storedJobs) {
-      setJobs(JSON.parse(storedJobs));
+    if (user?.id) {
+      const storedJobs = localStorage.getItem(`jobTracker_jobs_${user.id}`);
+      if (storedJobs) {
+        setJobs(JSON.parse(storedJobs));
+      }
     }
-  }, []);
+  }, [user]);
 
-  // Save jobs to localStorage
+  
   const saveJobs = (updatedJobs: Job[]) => {
     setJobs(updatedJobs);
-    localStorage.setItem('jobTracker_jobs', JSON.stringify(updatedJobs));
+    if (user?.id) {
+      localStorage.setItem(`jobTracker_jobs_${user.id}`, JSON.stringify(updatedJobs));
+    }
   };
 
-  // Get status display class
+  
   const getStatusClass = (status: Job['status']) => {
     return `status-${status.toLowerCase().replace(/\s+/g, '-')}`;
   };
 
-  // Update job status (cycle through: Applied -> Pending -> Rejected -> Applied)
+  
   const updateJobStatus = (jobId: string) => {
     const updatedJobs = jobs.map(job => {
       if (job.id === jobId) {
@@ -75,7 +83,7 @@ const Home: React.FC = () => {
     saveJobs(updatedJobs);
   };
 
-  // Delete job
+  
   const deleteJob = (jobId: string) => {
     if (confirm('Are you sure you want to delete this job application?')) {
       const updatedJobs = jobs.filter(job => job.id !== jobId);
@@ -83,7 +91,7 @@ const Home: React.FC = () => {
     }
   };
 
-  // Handle form input change
+  
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -92,7 +100,7 @@ const Home: React.FC = () => {
     }));
   };
 
-  // Submit new job
+  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -111,7 +119,7 @@ const Home: React.FC = () => {
     resetForm();
   };
 
-  // Reset form
+  
   const resetForm = () => {
     setFormData({
       companyName: '',
@@ -127,7 +135,7 @@ const Home: React.FC = () => {
     });
   };
 
-  // Filter jobs
+  
   const filteredJobs = jobs.filter(job => {
     const matchesSearch = job.companyName.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          job.role.toLowerCase().includes(searchTerm.toLowerCase());
@@ -135,7 +143,7 @@ const Home: React.FC = () => {
     return matchesSearch && matchesStatus;
   });
 
-  // Format date
+  
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();

@@ -27,6 +27,14 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
           </Link>
           
           <nav className="header-nav">
+            <Link to="/" className="nav-link home-link">
+              <Button variant="ghost" size="sm">
+                <Text variant="span" size="md" weight="medium">
+                  Home
+                </Text>
+              </Button>
+            </Link>
+            
             {isAuthenticated ? (
               <>
                 <Link to="/home" className="nav-link">

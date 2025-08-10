@@ -166,7 +166,7 @@
 
 .job-actions {
   padding: var(--spacing-6);
-  background-color: var(--color-gray-50);
+  background-color: var(--color-background);
   text-align: center;
 }
 
@@ -174,7 +174,7 @@
   text-decoration: none;
 }
 
-/* Loading and Error States */
+
 .loading-state,
 .not-found-state {
   text-align: center;
@@ -193,7 +193,7 @@
   text-decoration: none;
 }
 
-/* Responsive Design */
+
 @media (max-width: 320px) {
   .job-header {
     flex-direction: column;
