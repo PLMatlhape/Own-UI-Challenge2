@@ -1,0 +1,268 @@
+.job-details-page {
+  min-height: calc(100vh - 80px);
+}
+
+.header-navigation {
+  margin-bottom: var(--spacing-4);
+}
+
+.job-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--spacing-6);
+  margin-bottom: var(--spacing-8);
+}
+
+.job-title-section h1 {
+  margin-bottom: var(--spacing-2);
+}
+
+.job-status-badge {
+  padding: var(--spacing-2) var(--spacing-4);
+  border-radius: var(--radius-lg);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+}
+
+.job-status-badge.status-applied {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.job-status-badge.status-phone-screen {
+  background-color: #93c5fd;
+  color: #1d4ed8;
+}
+
+.job-status-badge.status-first-interview {
+  background-color: #a78bfa;
+  color: #6d28d9;
+}
+
+.job-status-badge.status-second-interview {
+  background-color: #c084fc;
+  color: #7c3aed;
+}
+
+.job-status-badge.status-final-interview {
+  background-color: #fbbf24;
+  color: #d97706;
+}
+
+.job-status-badge.status-offer-received {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.job-status-badge.status-rejected {
+  background-color: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.job-status-badge.status-withdrawn {
+  background-color: #d1d5db;
+  color: #374151;
+}
+
+.job-details-content {
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  overflow: hidden;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+
+.detail-card {
+  padding: var(--spacing-6);
+  border-bottom: 1px solid var(--color-gray-200);
+}
+
+.detail-card:last-child {
+  border-bottom: none;
+}
+
+.detail-title {
+  margin-bottom: var(--spacing-4);
+  padding-bottom: var(--spacing-2);
+  border-bottom: 2px solid var(--color-primary-light);
+}
+
+.detail-content {
+  line-height: 1.7;
+  white-space: pre-wrap;
+}
+
+.detail-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--spacing-3);
+  padding: var(--spacing-3);
+  background-color: var(--color-gray-50);
+  border-radius: var(--radius-md);
+}
+
+.detail-item:last-child {
+  margin-bottom: 0;
+}
+
+.status-inline {
+  padding: var(--spacing-1) var(--spacing-3);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.status-inline.status-applied {
+  background-color: var(--color-warning-light);
+  color: var(--color-warning-dark);
+}
+
+.status-inline.status-phone-screen {
+  background-color: #93c5fd;
+  color: #1d4ed8;
+}
+
+.status-inline.status-first-interview {
+  background-color: #a78bfa;
+  color: #6d28d9;
+}
+
+.status-inline.status-second-interview {
+  background-color: #c084fc;
+  color: #7c3aed;
+}
+
+.status-inline.status-final-interview {
+  background-color: #fbbf24;
+  color: #d97706;
+}
+
+.status-inline.status-offer-received {
+  background-color: var(--color-success-light);
+  color: var(--color-success-dark);
+}
+
+.status-inline.status-rejected {
+  background-color: var(--color-error-light);
+  color: var(--color-error-dark);
+}
+
+.status-inline.status-withdrawn {
+  background-color: #d1d5db;
+  color: #374151;
+}
+
+.job-actions {
+  padding: var(--spacing-6);
+  background-color: var(--color-background);
+  text-align: center;
+}
+
+.job-actions a {
+  text-decoration: none;
+}
+
+
+.loading-state,
+.not-found-state {
+  text-align: center;
+  padding: var(--spacing-20) var(--spacing-4);
+}
+
+.not-found-state h1 {
+  margin-bottom: var(--spacing-4);
+}
+
+.not-found-state p {
+  margin-bottom: var(--spacing-8);
+}
+
+.not-found-actions a {
+  text-decoration: none;
+}
+
+
+@media (max-width: 320px) {
+  .job-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-4);
+  }
+  
+  .job-status-badge {
+    align-self: flex-start;
+  }
+  
+  .detail-card {
+    padding: var(--spacing-4);
+  }
+  
+  .detail-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--spacing-2);
+  }
+  
+  .job-actions {
+    padding: var(--spacing-4);
+  }
+}
+
+@media (min-width: 480px) {
+  .detail-item {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .details-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .detail-card:nth-child(odd) {
+    border-right: 1px solid var(--color-gray-200);
+  }
+  
+  .detail-card {
+    padding: var(--spacing-8);
+  }
+  
+  .job-actions {
+    padding: var(--spacing-8);
+  }
+}
+
+@media (min-width: 1024px) {
+  .job-header {
+    align-items: center;
+  }
+  
+  .details-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .detail-card:nth-child(odd) {
+    border-right: none;
+  }
+}
+
+@media (min-width: 1200px) {
+  .page-container {
+    max-width: 1000px;
+    margin: 0 auto;
+  }
+}
+
