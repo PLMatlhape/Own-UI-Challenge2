@@ -1,69 +1,87 @@
-# React + TypeScript + Vite
+# JobTracker with JSON Server
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This project has been updated to use JSON Server instead of localStorage for data persistence.
 
-Currently, two official plugins are available:
+## Setup Instructions
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Install Dependencies
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 2. Start the Application
+You have two options:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+**Option A: Run both servers at once (Recommended)**
+```bash
+npm run dev:full
 ```
+This will start both the JSON Server (port 3001) and Vite dev server (port 5173) simultaneously.
+
+**Option B: Run servers separately**
+```bash
+# Terminal 1 - Start JSON Server
+npm run server
+
+# Terminal 2 - Start Vite dev server
+npm run dev
+```
+
+### 3. Access the Application
+- Frontend: http://localhost:5173
+- JSON Server API: http://localhost:3001
+
+## API Endpoints
+
+The JSON Server provides the following endpoints:
+
+### Users
+- `GET /users` - Get all users
+- `GET /users?username={username}&password={password}` - Login
+- `GET /users?username={username}` - Check if username exists
+- `POST /users` - Create new user
+
+### Jobs
+- `GET /jobs` - Get all jobs
+- `GET /jobs?userId={userId}` - Get jobs by user ID
+- `GET /jobs/{id}` - Get single job
+- `POST /jobs` - Create new job
+- `PATCH /jobs/{id}` - Update job
+- `DELETE /jobs/{id}` - Delete job
+
+## Changes Made
+
+1. **Added JSON Server**: Replaced localStorage with a REST API
+2. **Created API Service**: `src/services/api.ts` handles all API calls
+3. **Updated Components**: All components now use API calls instead of localStorage
+4. **Added Error Handling**: Better error messages and loading states
+5. **Updated Types**: Added `userId` field to Job interface
+
+## Default Login Credentials
+
+- Username: `demo`
+- Password: `demo123`
+
+## Database File
+
+The `db.json` file contains sample data. You can edit this file to add more users or jobs, and the server will automatically reload.
+
+## Troubleshooting
+
+1. **Make sure JSON Server is running** on port 3001
+2. **Check console for errors** - network errors usually indicate the server isn't running
+3. **CORS issues**: JSON Server handles CORS automatically
+4. **Port conflicts**: Change ports in package.json if needed
+
+## Development
+
+The application now maintains session state using localStorage for the current user session, while all job data is stored and retrieved from the JSON Server API.
+
+## Technology Stack
+
+- **Frontend**: React + TypeScript + Vite
+- **Backend**: JSON Server (REST API)
+- **Styling**: CSS with custom design system
+- **State Management**: React useState/useEffect
+- **HTTP Client**: Axios
+- **Development**: Concurrently for running multiple servers

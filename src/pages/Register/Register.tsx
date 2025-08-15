@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Text, Button } from '../../index';
 import type { User } from '../../index';
+import { userAPI, handleAPIError } from '../../services/api';
 import './Register.css';
 
 interface RegisterProps {
@@ -33,33 +34,23 @@ const Register: React.FC<RegisterProps> = ({ onRegister }) => {
         return;
       }
 
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      
-      const storedUsers = JSON.parse(localStorage.getItem('jobTracker_users') || '[]');
-      const existingUser = storedUsers.find((u: User) => u.username === username);
-      
-      if (existingUser) {
+      // Check if username already exists
+      const userExists = await userAPI.checkUsername(username);
+      if (userExists) {
         setError('Username already exists');
         return;
       }
 
-      
-      const newUser: User = {
-        id: Date.now().toString(),
+      // Create new user via API
+      const newUser = await userAPI.createUser({
         username,
         password
-      };
-
-      
-      const updatedUsers = [...storedUsers, newUser];
-      localStorage.setItem('jobTracker_users', JSON.stringify(updatedUsers));
+      });
       
       onRegister(newUser);
       navigate('/home');
     } catch (err) {
-      setError('Registration failed. Please try again.');
+      setError(handleAPIError(err));
     } finally {
       setLoading(false);
     }

@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Text, Button } from '../../index';
 import type { User } from '../../index';
+import { userAPI, handleAPIError } from '../../services/api';
 import './Login.css';
 
 interface LoginProps {
@@ -21,12 +22,8 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
     setLoading(true);
 
     try {
-      
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      
-      const storedUsers = JSON.parse(localStorage.getItem('jobTracker_users') || '[]');
-      const user = storedUsers.find((u: User) => u.username === username && u.password === password);
+      // Call API to authenticate user
+      const user = await userAPI.login(username, password);
       
       if (user) {
         onLogin(user);
@@ -35,7 +32,7 @@ const Login: React.FC<LoginProps> = ({ onLogin }) => {
         setError('Invalid username or password');
       }
     } catch (err) {
-      setError('Login failed. Please try again.');
+      setError(handleAPIError(err));
     } finally {
       setLoading(false);
     }

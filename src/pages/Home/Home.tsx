@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Text, Button } from '../../index';
 import type { Job, User } from '../../index';
+import { jobAPI, handleAPIError } from '../../services/api';
 import './Home.css';
 
 interface HomeProps {
@@ -12,6 +13,8 @@ const Home: React.FC<HomeProps> = ({ user }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   
   const [formData, setFormData] = useState({
@@ -35,21 +38,55 @@ const Home: React.FC<HomeProps> = ({ user }) => {
     rejected: jobs.filter(job => job.status === 'Rejected').length
   };
 
-  
+  // Load jobs from API when component mounts
   useEffect(() => {
-    if (user?.id) {
-      const storedJobs = localStorage.getItem(`jobTracker_jobs_${user.id}`);
-      if (storedJobs) {
-        setJobs(JSON.parse(storedJobs));
+    const loadJobs = async () => {
+      if (user?.id) {
+        setLoading(true);
+        setError('');
+        try {
+          const userJobs = await jobAPI.getUserJobs(user.id);
+          setJobs(userJobs);
+        } catch (err) {
+          setError(handleAPIError(err));
+        } finally {
+          setLoading(false);
+        }
       }
-    }
+    };
+
+    loadJobs();
   }, [user]);
 
-  
-  const saveJobs = (updatedJobs: Job[]) => {
-    setJobs(updatedJobs);
-    if (user?.id) {
-      localStorage.setItem(`jobTracker_jobs_${user.id}`, JSON.stringify(updatedJobs));
+  // Save jobs to API
+  const saveJob = async (jobData: Omit<Job, 'id'>) => {
+    if (!user?.id) return;
+
+    try {
+      const newJob = await jobAPI.createJob({ ...jobData, userId: user.id });
+      setJobs(prev => [...prev, newJob]);
+    } catch (err) {
+      setError(handleAPIError(err));
+    }
+  };
+
+  // Update job via API
+  const updateJob = async (jobId: string, updates: Partial<Job>) => {
+    try {
+      const updatedJob = await jobAPI.updateJob(jobId, updates);
+      setJobs(prev => prev.map(job => job.id === jobId ? updatedJob : job));
+    } catch (err) {
+      setError(handleAPIError(err));
+    }
+  };
+
+  // Delete job via API
+  const removeJob = async (jobId: string) => {
+    try {
+      await jobAPI.deleteJob(jobId);
+      setJobs(prev => prev.filter(job => job.id !== jobId));
+    } catch (err) {
+      setError(handleAPIError(err));
     }
   };
 
@@ -58,36 +95,33 @@ const Home: React.FC<HomeProps> = ({ user }) => {
     return `status-${status.toLowerCase().replace(/\s+/g, '-')}`;
   };
 
-  
+  // Update job status
   const updateJobStatus = (jobId: string) => {
-    const updatedJobs = jobs.map(job => {
-      if (job.id === jobId) {
-        let newStatus: Job['status'];
-        switch (job.status) {
-          case 'Applied':
-            newStatus = 'Pending';
-            break;
-          case 'Pending':
-            newStatus = 'Rejected';
-            break;
-          case 'Rejected':
-            newStatus = 'Applied';
-            break;
-          default:
-            newStatus = 'Applied';
-        }
-        return { ...job, status: newStatus };
-      }
-      return job;
-    });
-    saveJobs(updatedJobs);
+    const job = jobs.find(j => j.id === jobId);
+    if (!job) return;
+
+    let newStatus: Job['status'];
+    switch (job.status) {
+      case 'Applied':
+        newStatus = 'Pending';
+        break;
+      case 'Pending':
+        newStatus = 'Rejected';
+        break;
+      case 'Rejected':
+        newStatus = 'Applied';
+        break;
+      default:
+        newStatus = 'Applied';
+    }
+    
+    updateJob(jobId, { status: newStatus });
   };
 
-  
+  // Delete job
   const deleteJob = (jobId: string) => {
     if (confirm('Are you sure you want to delete this job application?')) {
-      const updatedJobs = jobs.filter(job => job.id !== jobId);
-      saveJobs(updatedJobs);
+      removeJob(jobId);
     }
   };
 
@@ -100,23 +134,29 @@ const Home: React.FC<HomeProps> = ({ user }) => {
     }));
   };
 
-  
-  const handleSubmit = (e: React.FormEvent) => {
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.companyName.trim() || !formData.role.trim()) {
-      alert('Company name and role are required!');
+      setError('Company name and role are required!');
       return;
     }
 
-    const newJob: Job = {
-      id: Date.now().toString(),
-      ...formData
+    if (!user?.id) {
+      setError('User not authenticated');
+      return;
+    }
+
+    const jobData = {
+      ...formData,
+      userId: user.id
     };
     
-    saveJobs([...jobs, newJob]);
+    await saveJob(jobData);
     setShowAddForm(false);
     resetForm();
+    setError(''); // Clear any previous errors
   };
 
   
@@ -157,6 +197,56 @@ const Home: React.FC<HomeProps> = ({ user }) => {
 
   return (
     <div className="dashboard">
+      {/* Error Display */}
+      {error && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          backgroundColor: '#ef4444',
+          color: 'white',
+          padding: '12px 20px',
+          borderRadius: '8px',
+          zIndex: 1000,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
+        }}>
+          <Text variant="p" size="sm" color="white">
+            {error}
+          </Text>
+          <button 
+            onClick={() => setError('')}
+            style={{
+              background: 'none',
+              border: 'none',
+              color: 'white',
+              marginLeft: '10px',
+              cursor: 'pointer',
+              fontSize: '18px'
+            }}
+          >
+            ×
+          </button>
+        </div>
+      )}
+
+      {/* Loading Display */}
+      {loading && (
+        <div style={{
+          position: 'fixed',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: 'rgba(0,0,0,0.8)',
+          color: 'white',
+          padding: '20px',
+          borderRadius: '8px',
+          zIndex: 1000
+        }}>
+          <Text variant="p" size="lg" color="white">
+            Loading...
+          </Text>
+        </div>
+      )}
       {/* Background with floating shapes */}
       <div className="dashboard-background">
         <div className="floating-shapes">

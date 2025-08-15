@@ -15,15 +15,17 @@ import './App.css';
 function App() {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    
+    // Check if user is stored in localStorage (for session persistence)
     const storedUser = localStorage.getItem('jobTracker_user');
     if (storedUser) {
       const userData = JSON.parse(storedUser);
       setUser(userData);
       setIsAuthenticated(true);
     }
+    setLoading(false);
   }, []);
 
   const handleLogin = (userData: User) => {
@@ -41,6 +43,10 @@ function App() {
   const ProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     return isAuthenticated ? <>{children}</> : <Navigate to="/login" replace />;
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <Router>

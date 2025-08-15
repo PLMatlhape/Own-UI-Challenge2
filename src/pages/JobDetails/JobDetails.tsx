@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { Text, Button } from '../../index';
 import type { Job, User } from '../../index';
+import { jobAPI, handleAPIError } from '../../services/api';
 import './JobDetails.css';
 
 interface JobDetailsProps {
@@ -13,18 +14,28 @@ const JobDetails: React.FC<JobDetailsProps> = ({ user }) => {
   const navigate = useNavigate();
   const [job, setJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    if (user?.id) {
-      const storedJobs = localStorage.getItem(`jobTracker_jobs_${user.id}`);
-      if (storedJobs && id) {
-        const jobs: Job[] = JSON.parse(storedJobs);
-        const foundJob = jobs.find(j => j.id === id);
-        setJob(foundJob || null);
+    const loadJob = async () => {
+      if (id) {
+        setLoading(true);
+        setError('');
+        try {
+          const jobData = await jobAPI.getJob(id);
+          setJob(jobData);
+        } catch (err) {
+          setError(handleAPIError(err));
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        setLoading(false);
       }
-    }
-    setLoading(false);
-  }, [id, user]);
+    };
+
+    loadJob();
+  }, [id]);
 
   const getStatusClass = (status: string) => {
     return `status-${status.toLowerCase().replace(/\s+/g, '-')}`;
@@ -46,6 +57,30 @@ const JobDetails: React.FC<JobDetailsProps> = ({ user }) => {
             <Text variant="p" size="lg" color="secondary" align="center">
               Loading job details...
             </Text>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="job-details-page">
+        <div className="container">
+          <div className="not-found-state">
+            <Text variant="h1" size="2xl" weight="bold" color="error" align="center">
+              Error
+            </Text>
+            <Text variant="p" size="lg" color="secondary" align="center">
+              {error}
+            </Text>
+            <div className="not-found-actions">
+              <Link to="/home">
+                <Button variant="primary" size="lg">
+                  Back to Dashboard
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
