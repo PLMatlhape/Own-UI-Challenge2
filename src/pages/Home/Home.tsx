@@ -12,9 +12,14 @@ const Home: React.FC<HomeProps> = ({ user }) => {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [sortBy, setSortBy] = useState<'date' | 'company' | 'role' | 'status'>('date');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [editingJob, setEditingJob] = useState<Job | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
 
   
   const [formData, setFormData] = useState({
@@ -157,6 +162,46 @@ const Home: React.FC<HomeProps> = ({ user }) => {
     setShowAddForm(false);
     resetForm();
     setError(''); // Clear any previous errors
+    setSuccessMessage('Job application added successfully!');
+    setTimeout(() => setSuccessMessage(''), 3000);
+  };
+
+  // Handle edit job
+  const handleEdit = (job: Job) => {
+    setEditingJob(job);
+    setFormData({
+      companyName: job.companyName,
+      role: job.role,
+      status: job.status,
+      dateApplied: job.dateApplied,
+      description: job.description || '',
+      requirements: job.requirements || '',
+      duties: job.duties || '',
+      contactDetails: job.contactDetails || '',
+      address: job.address || '',
+      notes: job.notes || ''
+    });
+    setShowEditForm(true);
+  };
+
+  // Handle edit form submission
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!formData.companyName.trim() || !formData.role.trim()) {
+      setError('Company name and role are required!');
+      return;
+    }
+
+    if (!editingJob) return;
+
+    await updateJob(editingJob.id, formData);
+    setShowEditForm(false);
+    setEditingJob(null);
+    resetForm();
+    setError('');
+    setSuccessMessage('Job application updated successfully!');
+    setTimeout(() => setSuccessMessage(''), 3000);
   };
 
   
@@ -183,6 +228,28 @@ const Home: React.FC<HomeProps> = ({ user }) => {
     return matchesSearch && matchesStatus;
   });
 
+  // Sort filtered jobs
+  const sortedJobs = [...filteredJobs].sort((a, b) => {
+    let comparison = 0;
+    
+    switch (sortBy) {
+      case 'date':
+        comparison = new Date(a.dateApplied).getTime() - new Date(b.dateApplied).getTime();
+        break;
+      case 'company':
+        comparison = a.companyName.localeCompare(b.companyName);
+        break;
+      case 'role':
+        comparison = a.role.localeCompare(b.role);
+        break;
+      case 'status':
+        comparison = a.status.localeCompare(b.status);
+        break;
+    }
+    
+    return sortOrder === 'asc' ? comparison : -comparison;
+  });
+
   
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -197,6 +264,29 @@ const Home: React.FC<HomeProps> = ({ user }) => {
 
   return (
     <div className="dashboard">
+      {/* Success Message */}
+      {successMessage && (
+        <div style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          backgroundColor: '#10b981',
+          color: 'white',
+          padding: '12px 20px',
+          borderRadius: '8px',
+          zIndex: 1000,
+          boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
+        }}>
+          <span>✓</span>
+          <Text variant="p" size="sm" color="white">
+            {successMessage}
+          </Text>
+        </div>
+      )}
+
       {/* Error Display */}
       {error && (
         <div style={{
@@ -355,13 +445,33 @@ const Home: React.FC<HomeProps> = ({ user }) => {
                 <option value="Rejected">Rejected</option>
               </select>
             </div>
+            <div className="sort-wrapper">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as 'date' | 'company' | 'role' | 'status')}
+                className="sort-select"
+                title="Sort jobs by field"
+              >
+                <option value="date">Sort by Date</option>
+                <option value="company">Sort by Company</option>
+                <option value="role">Sort by Role</option>
+                <option value="status">Sort by Status</option>
+              </select>
+              <button
+                onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                className="sort-order-btn"
+                title={`Sort order: ${sortOrder === 'asc' ? 'Ascending' : 'Descending'}`}
+              >
+                {sortOrder === 'asc' ? '↑' : '↓'}
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Jobs List */}
       <div className="jobs-section">
-        {filteredJobs.length === 0 ? (
+        {sortedJobs.length === 0 ? (
           <div className="empty-state">
             <div className="empty-icon">📝</div>
             <Text variant="h3" className="empty-title">No applications found</Text>
@@ -382,7 +492,7 @@ const Home: React.FC<HomeProps> = ({ user }) => {
           </div>
         ) : (
           <div className="jobs-grid">
-            {filteredJobs.map((job, index) => (
+            {sortedJobs.map((job, index) => (
               <div 
                 key={job.id} 
                 className={`job-card job-card-${index}`}
@@ -450,15 +560,26 @@ const Home: React.FC<HomeProps> = ({ user }) => {
                       </Text>
                     )}
                   </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => deleteJob(job.id)}
-                    className="delete-btn"
-                  >
-                    <span className="btn-icon">🗑️</span>
-                    Delete
-                  </Button>
+                  <div className="job-footer-actions">
+                    <Button 
+                      variant="ghost" 
+                      size="sm"
+                      onClick={() => handleEdit(job)}
+                      className="edit-btn"
+                    >
+                      <span className="btn-icon">✏️</span>
+                      Edit
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => deleteJob(job.id)}
+                      className="delete-btn"
+                    >
+                      <span className="btn-icon">🗑️</span>
+                      Delete
+                    </Button>
+                  </div>
                 </div>
               </div>
             ))}
@@ -608,6 +729,155 @@ const Home: React.FC<HomeProps> = ({ user }) => {
                 </Button>
                 <Button type="submit">
                   Add Job Application
+                </Button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Job Form Modal */}
+      {showEditForm && editingJob && (
+        <div className="modal-overlay" onClick={() => { setShowEditForm(false); setEditingJob(null); resetForm(); }}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <Text variant="h2">Edit Job Application</Text>
+              <button 
+                className="close-btn"
+                onClick={() => { setShowEditForm(false); setEditingJob(null); resetForm(); }}
+              >
+                ×
+              </button>
+            </div>
+            
+            <form onSubmit={handleEditSubmit} className="job-form">
+              <div className="form-grid">
+                <div className="form-group">
+                  <label className="form-label">Company Name *</label>
+                  <input
+                    type="text"
+                    name="companyName"
+                    value={formData.companyName}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Enter company name"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label className="form-label">Job Role *</label>
+                  <input
+                    type="text"
+                    name="role"
+                    value={formData.role}
+                    onChange={handleInputChange}
+                    required
+                    placeholder="Enter job role"
+                  />
+                </div>
+                
+                <div className="form-group">
+                  <label className="form-label">Status</label>
+                  <select
+                    name="status"
+                    value={formData.status}
+                    onChange={handleInputChange}
+                    title="Select job application status"
+                  >
+                    <option value="Applied">Applied</option>
+                    <option value="Pending">Pending</option>
+                    <option value="Rejected">Rejected</option>
+                  </select>
+                </div>
+                
+                <div className="form-group">
+                  <label className="form-label">Date Applied</label>
+                  <input
+                    type="date"
+                    name="dateApplied"
+                    value={formData.dateApplied}
+                    onChange={handleInputChange}
+                    title="Select date when you applied"
+                  />
+                </div>
+              </div>
+              
+              <div className="form-group">
+                <label className="form-label">Job Description</label>
+                <textarea
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  rows={4}
+                  placeholder="Brief description of the role..."
+                />
+              </div>
+              
+              <div className="form-group">
+                <label className="form-label">Requirements</label>
+                <textarea
+                  name="requirements"
+                  value={formData.requirements}
+                  onChange={handleInputChange}
+                  rows={3}
+                  placeholder="Key requirements and qualifications..."
+                />
+              </div>
+              
+              <div className="form-group">
+                <label className="form-label">Key Duties</label>
+                <textarea
+                  name="duties"
+                  value={formData.duties}
+                  onChange={handleInputChange}
+                  rows={3}
+                  placeholder="Main responsibilities..."
+                />
+              </div>
+              
+              <div className="form-group">
+                <label className="form-label">Contact Details</label>
+                <input
+                  type="text"
+                  name="contactDetails"
+                  value={formData.contactDetails}
+                  onChange={handleInputChange}
+                  placeholder="HR contact, email, phone..."
+                />
+              </div>
+              
+              <div className="form-group">
+                <label className="form-label">Company Address</label>
+                <input
+                  type="text"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  placeholder="Company location..."
+                />
+              </div>
+              
+              <div className="form-group">
+                <label className="form-label">Notes</label>
+                <textarea
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleInputChange}
+                  rows={3}
+                  placeholder="Additional notes, interview dates, etc..."
+                />
+              </div>
+              
+              <div className="form-actions">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => { setShowEditForm(false); setEditingJob(null); resetForm(); }}
+                >
+                  Cancel
+                </Button>
+                <Button type="submit">
+                  Save Changes
                 </Button>
               </div>
             </form>

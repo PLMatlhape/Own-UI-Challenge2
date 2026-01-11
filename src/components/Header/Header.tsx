@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Text, Button } from '../../index';
 import './Header.css';
@@ -10,10 +10,16 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
     onLogout();
     navigate('/');
+    setIsMobileMenuOpen(false);
+  };
+
+  const closeMobileMenu = () => {
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -26,8 +32,19 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
             </Text>
           </Link>
           
-          <nav className="header-nav">
-            <Link to="/" className="nav-link home-link">
+          {/* Hamburger Menu Button */}
+          <button 
+            className={`hamburger ${isMobileMenuOpen ? 'active' : ''}`}
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label="Toggle menu"
+          >
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
+          
+          <nav className={`header-nav ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
+            <Link to="/" className="nav-link home-link" onClick={closeMobileMenu}>
               <Button variant="ghost" size="sm">
                 <Text variant="span" size="md" weight="medium">
                   Home
@@ -37,7 +54,7 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
             
             {isAuthenticated ? (
               <>
-                <Link to="/home" className="nav-link">
+                <Link to="/home" className="nav-link" onClick={closeMobileMenu}>
                   <Text variant="span" size="md" weight="medium">
                     Dashboard
                   </Text>
@@ -48,12 +65,12 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
               </>
             ) : (
               <div className="auth-buttons">
-                <Link to="/login">
+                <Link to="/login" onClick={closeMobileMenu}>
                   <Button variant="ghost" size="sm">
                     Login
                   </Button>
                 </Link>
-                <Link to="/register">
+                <Link to="/register" onClick={closeMobileMenu}>
                   <Button variant="primary" size="sm">
                     Register
                   </Button>
