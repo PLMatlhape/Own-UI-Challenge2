@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, Button } from '../../index';
 import type { Job, User } from '../../index';
-import { jobAPI, handleAPIError } from '../../services/api';
 import './Home.css';
 
 interface HomeProps {
@@ -43,17 +42,19 @@ const Home: React.FC<HomeProps> = ({ user }) => {
     rejected: jobs.filter(job => job.status === 'Rejected').length
   };
 
-  // Load jobs from API when component mounts
+  // Load jobs from localStorage when component mounts
   useEffect(() => {
-    const loadJobs = async () => {
+    const loadJobs = () => {
       if (user?.id) {
         setLoading(true);
         setError('');
         try {
-          const userJobs = await jobAPI.getUserJobs(user.id);
-          setJobs(userJobs);
+          const storedJobs = localStorage.getItem(`jobs_${user.id}`);
+          if (storedJobs) {
+            setJobs(JSON.parse(storedJobs));
+          }
         } catch (err) {
-          setError(handleAPIError(err));
+          setError('Failed to load jobs from storage');
         } finally {
           setLoading(false);
         }
@@ -63,35 +64,50 @@ const Home: React.FC<HomeProps> = ({ user }) => {
     loadJobs();
   }, [user]);
 
-  // Save jobs to API
-  const saveJob = async (jobData: Omit<Job, 'id'>) => {
+  // Save jobs to localStorage
+  const saveJobsToStorage = (updatedJobs: Job[]) => {
+    if (user?.id) {
+      localStorage.setItem(`jobs_${user.id}`, JSON.stringify(updatedJobs));
+    }
+  };
+
+  // Save jobs to localStorage
+  const saveJob = (jobData: Omit<Job, 'id'>) => {
     if (!user?.id) return;
 
     try {
-      const newJob = await jobAPI.createJob({ ...jobData, userId: user.id });
-      setJobs(prev => [...prev, newJob]);
+      const newJob = {
+        ...jobData,
+        id: Date.now().toString(),
+        userId: user.id
+      };
+      const updatedJobs = [...jobs, newJob];
+      setJobs(updatedJobs);
+      saveJobsToStorage(updatedJobs);
     } catch (err) {
-      setError(handleAPIError(err));
+      setError('Failed to save job');
     }
   };
 
-  // Update job via API
-  const updateJob = async (jobId: string, updates: Partial<Job>) => {
+  // Update job in localStorage
+  const updateJob = (jobId: string, updates: Partial<Job>) => {
     try {
-      const updatedJob = await jobAPI.updateJob(jobId, updates);
-      setJobs(prev => prev.map(job => job.id === jobId ? updatedJob : job));
+      const updatedJobs = jobs.map(job => job.id === jobId ? { ...job, ...updates } : job);
+      setJobs(updatedJobs);
+      saveJobsToStorage(updatedJobs);
     } catch (err) {
-      setError(handleAPIError(err));
+      setError('Failed to update job');
     }
   };
 
-  // Delete job via API
-  const removeJob = async (jobId: string) => {
+  // Delete job from localStorage
+  const removeJob = (jobId: string) => {
     try {
-      await jobAPI.deleteJob(jobId);
-      setJobs(prev => prev.filter(job => job.id !== jobId));
+      const updatedJobs = jobs.filter(job => job.id !== jobId);
+      setJobs(updatedJobs);
+      saveJobsToStorage(updatedJobs);
     } catch (err) {
-      setError(handleAPIError(err));
+      setError('Failed to delete job');
     }
   };
 
@@ -140,7 +156,7 @@ const Home: React.FC<HomeProps> = ({ user }) => {
   };
 
   // Handle form submission
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.companyName.trim() || !formData.role.trim()) {
@@ -158,7 +174,7 @@ const Home: React.FC<HomeProps> = ({ user }) => {
       userId: user.id
     };
     
-    await saveJob(jobData);
+    saveJob(jobData);
     setShowAddForm(false);
     resetForm();
     setError(''); // Clear any previous errors
@@ -185,7 +201,7 @@ const Home: React.FC<HomeProps> = ({ user }) => {
   };
 
   // Handle edit form submission
-  const handleEditSubmit = async (e: React.FormEvent) => {
+  const handleEditSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.companyName.trim() || !formData.role.trim()) {
@@ -195,7 +211,7 @@ const Home: React.FC<HomeProps> = ({ user }) => {
 
     if (!editingJob) return;
 
-    await updateJob(editingJob.id, formData);
+    updateJob(editingJob.id, formData);
     setShowEditForm(false);
     setEditingJob(null);
     resetForm();
