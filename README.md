@@ -1,6 +1,15 @@
-# JobTracker with JSON Server
+# JobTracker with localStorage
 
-This project has been updated to use JSON Server instead of localStorage for data persistence.
+This is the **FixedStorage** branch of the JobTracker project, optimized for hosting platforms like Vercel. This version uses **localStorage** instead of JSON Server for data persistence, eliminating the need for a backend server.
+
+## Features
+
+- 📱 **Fully Responsive Design** - Optimized for all devices (mobile, tablet, desktop)
+- 🍔 **Hamburger Menu** - Mobile-friendly navigation with smooth animations
+- 🔄 **Sorting & Filtering** - Sort by date, company, role, or status
+- ✏️ **Edit Functionality** - Update job applications inline
+- 💾 **localStorage Persistence** - All data saved locally in your browser
+- 🎨 **Modern UI** - Clean, intuitive interface with React & TypeScript
 
 ## Setup Instructions
 
@@ -10,44 +19,28 @@ npm install
 ```
 
 ### 2. Start the Application
-You have two options:
-
-**Option A: Run both servers at once (Recommended)**
 ```bash
-npm run dev:full
-```
-This will start both the JSON Server (port 3001) and Vite dev server (port 5173) simultaneously.
-
-**Option B: Run servers separately**
-```bash
-# Terminal 1 - Start JSON Server
-npm run server
-
-# Terminal 2 - Start Vite dev server
 npm run dev
 ```
 
 ### 3. Access the Application
 - Frontend: http://localhost:5173
-- JSON Server API: http://localhost:3001
 
-## API Endpoints
+## Branch Differences
 
-The JSON Server provides the following endpoints:
+- **dev branch**: Uses JSON Server for API-based data storage (requires backend)
+- **FixedStorage branch** (this branch): Uses localStorage for client-side storage (no backend needed)
+- **main branch**: Production-ready version
 
-### Users
-- `GET /users` - Get all users
-- `GET /users?username={username}&password={password}` - Login
-- `GET /users?username={username}` - Check if username exists
-- `POST /users` - Create new user
+## Hosting
 
-### Jobs
-- `GET /jobs` - Get all jobs
-- `GET /jobs?userId={userId}` - Get jobs by user ID
-- `GET /jobs/{id}` - Get single job
-- `POST /jobs` - Create new job
-- `PATCH /jobs/{id}` - Update job
-- `DELETE /jobs/{id}` - Delete job
+This branch is specifically designed for hosting on platforms like:
+- Vercel
+- Netlify  
+- GitHub Pages
+- Any static hosting service
+
+No server configuration needed!
 
 ## Changes Made
 

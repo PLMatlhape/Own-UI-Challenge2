@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Text, Button } from '../../index';
 import type { Job, User } from '../../index';
-import { jobAPI, handleAPIError } from '../../services/api';
 import './Home.css';
 
 interface HomeProps {
@@ -43,17 +42,20 @@ const Home: React.FC<HomeProps> = ({ user }) => {
     rejected: jobs.filter(job => job.status === 'Rejected').length
   };
 
-  // Load jobs from API when component mounts
+  // Load jobs from localStorage when component mounts
   useEffect(() => {
-    const loadJobs = async () => {
+    const loadJobs = () => {
       if (user?.id) {
         setLoading(true);
         setError('');
         try {
-          const userJobs = await jobAPI.getUserJobs(user.id);
-          setJobs(userJobs);
+          const storedJobs = localStorage.getItem(`jobs_${user.id}`);
+          if (storedJobs) {
+            setJobs(JSON.parse(storedJobs));
+          }
         } catch (err) {
-          setError(handleAPIError(err));
+          console.error('Failed to load jobs:', err);
+          setError('Failed to load jobs from storage');
         } finally {
           setLoading(false);
         }
@@ -63,35 +65,47 @@ const Home: React.FC<HomeProps> = ({ user }) => {
     loadJobs();
   }, [user]);
 
-  // Save jobs to API
-  const saveJob = async (jobData: Omit<Job, 'id'>) => {
+  // Save job to localStorage
+  const saveJob = (jobData: Omit<Job, 'id'>) => {
     if (!user?.id) return;
 
     try {
-      const newJob = await jobAPI.createJob({ ...jobData, userId: user.id });
-      setJobs(prev => [...prev, newJob]);
+      const newJob = { ...jobData, id: Date.now().toString(), userId: user.id };
+      const updatedJobs = [...jobs, newJob];
+      setJobs(updatedJobs);
+      localStorage.setItem(`jobs_${user.id}`, JSON.stringify(updatedJobs));
+      return newJob;
     } catch (err) {
-      setError(handleAPIError(err));
+      console.error('Failed to save job:', err);
+      setError('Failed to save job');
     }
   };
 
-  // Update job via API
-  const updateJob = async (jobId: string, updates: Partial<Job>) => {
+  // Update job in localStorage
+  const updateJob = (jobId: string, updates: Partial<Job>) => {
+    if (!user?.id) return;
+    
     try {
-      const updatedJob = await jobAPI.updateJob(jobId, updates);
-      setJobs(prev => prev.map(job => job.id === jobId ? updatedJob : job));
+      const updatedJobs = jobs.map(job => job.id === jobId ? { ...job, ...updates } : job);
+      setJobs(updatedJobs);
+      localStorage.setItem(`jobs_${user.id}`, JSON.stringify(updatedJobs));
     } catch (err) {
-      setError(handleAPIError(err));
+      console.error('Failed to update job:', err);
+      setError('Failed to update job');
     }
   };
 
-  // Delete job via API
-  const removeJob = async (jobId: string) => {
+  // Delete job from localStorage
+  const removeJob = (jobId: string) => {
+    if (!user?.id) return;
+    
     try {
-      await jobAPI.deleteJob(jobId);
-      setJobs(prev => prev.filter(job => job.id !== jobId));
+      const updatedJobs = jobs.filter(job => job.id !== jobId);
+      setJobs(updatedJobs);
+      localStorage.setItem(`jobs_${user.id}`, JSON.stringify(updatedJobs));
     } catch (err) {
-      setError(handleAPIError(err));
+      console.error('Failed to delete job:', err);
+      setError('Failed to delete job');
     }
   };
 
