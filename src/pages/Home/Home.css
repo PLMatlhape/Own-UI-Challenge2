@@ -790,6 +790,14 @@
   backdrop-filter: blur(20px);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   animation: modalSlideIn 0.3s ease-out;
+  /* Hide scrollbar while keeping scroll functionality */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.modal-content::-webkit-scrollbar {
+  display: none;
 }
 
 @keyframes modalSlideIn {
@@ -1114,11 +1122,15 @@
   }
   
   .modal-overlay {
-    padding: 1rem;
+    padding: 0.5rem;
+    align-items: flex-start;
+    padding-top: 1rem;
   }
   
   .modal-content {
     border-radius: 16px;
+    max-height: calc(100vh - 2rem);
+    width: 100%;
   }
   
   .modal-header {
@@ -1177,14 +1189,32 @@
   
   .modal-header {
     padding: 1rem;
+    flex-direction: column;
+    gap: 0.75rem;
   }
   
   .job-form {
     padding: 1rem;
+    padding-bottom: 1.5rem;
+  }
+  
+  .modal-content {
+    max-height: calc(100vh - 1rem);
+    border-radius: 12px;
+  }
+  
+  .modal-overlay {
+    padding: 0.5rem;
+    align-items: flex-start;
   }
   
   .form-actions {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .form-actions button {
+    width: 100%;
   }
 }
 
@@ -2356,4 +2386,49 @@
   margin-top: 1rem;
   padding-top: 1rem;
   border-top: 2px solid rgba(99, 102, 241, 0.2);
+}
+
+/* Extra small screens - Better modal handling */
+@media (max-width: 360px) {
+  .modal-overlay {
+    padding: 0.25rem;
+    align-items: flex-start;
+  }
+  
+  .modal-content {
+    max-height: calc(100vh - 0.5rem);
+    border-radius: 8px;
+    margin: 0;
+  }
+  
+  .modal-header {
+    padding: 0.75rem;
+  }
+  
+  .job-form {
+    padding: 0.75rem;
+  }
+  
+  .modal-title {
+    font-size: 1.25rem;
+  }
+  
+  .modal-subtitle {
+    font-size: 0.75rem;
+  }
+  
+  .form-group {
+    gap: 0.375rem;
+  }
+  
+  .form-group input,
+  .form-group textarea,
+  .form-group select {
+    padding: 0.625rem;
+    font-size: 0.875rem;
+  }
+  
+  .form-actions {
+    gap: 0.5rem;
+  }
 }
