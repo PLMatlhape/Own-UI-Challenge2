@@ -186,6 +186,13 @@
 
 .btn-icon {
   font-size: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-text {
+  display: inline;
 }
 
 
@@ -1139,12 +1146,26 @@
   .stats-section,
   .search-section,
   .jobs-section {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
   
   .dashboard-title {
-    font-size: 1.75rem;
+    font-size: 1.5rem;
+    line-height: 1.3;
+  }
+
+  .dashboard-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .add-job-btn {
+    padding: 10px 16px !important;
+    font-size: 0.875rem !important;
+  }
+
+  .btn-icon {
+    font-size: 1.25rem;
   }
   
   .stats-grid {
@@ -1152,39 +1173,206 @@
   }
   
   .stat-card {
-    padding: 1.5rem;
+    padding: 1.25rem;
+  }
+
+  .stat-icon {
+    font-size: 1.75rem;
+  }
+
+  .stat-number {
+    font-size: 1.75rem;
+  }
+
+  .stat-label {
+    font-size: 0.75rem;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+  }
+
+  .search-input {
+    padding: 12px 1rem 12px 2.75rem;
+    font-size: 0.875rem;
+  }
+
+  .filter-select,
+  .sort-select {
+    padding: 12px 1rem;
+    font-size: 0.875rem;
+  }
+
+  .sort-order-btn {
+    padding: 12px;
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
   }
   
   .job-card {
     padding: 1rem;
   }
+
+  .job-title {
+    font-size: 1.125rem;
+  }
+
+  .job-company {
+    font-size: 0.9375rem;
+  }
+
+  .job-date {
+    font-size: 0.8125rem;
+  }
+
+  .job-status {
+    padding: 6px 12px;
+    font-size: 0.6875rem;
+  }
+
+  .job-description,
+  .job-requirements {
+    font-size: 0.875rem;
+  }
   
   .job-footer {
     flex-direction: column;
     align-items: stretch;
-    gap: 1rem;
+    gap: 0.75rem;
+  }
+
+  .job-details {
+    gap: 0.5rem;
+  }
+
+  .job-location,
+  .job-contact {
+    font-size: 0.75rem;
   }
 
   .job-footer-actions {
     width: 100%;
     justify-content: space-between;
+    gap: 0.75rem;
   }
 
   .edit-btn,
   .delete-btn {
     flex: 1;
+    padding: 10px 12px !important;
+    font-size: 0.75rem !important;
   }
   
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+
+  .modal-content {
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
   .modal-header {
     padding: 1rem;
+    position: sticky;
+    top: 0;
+    background: rgba(15, 15, 35, 0.98);
+    z-index: 10;
+  }
+
+  .modal-title {
+    font-size: 1.25rem;
+  }
+
+  .close-btn {
+    font-size: 2rem;
   }
   
   .job-form {
     padding: 1rem;
   }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .form-label {
+    font-size: 0.875rem;
+  }
+
+  .form-group input,
+  .form-group select,
+  .form-group textarea {
+    font-size: 0.9375rem;
+    padding: 10px 12px;
+  }
   
   .form-actions {
     flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .form-actions .button {
+    width: 100%;
+    padding: 12px !important;
+  }
+
+  .empty-state {
+    padding: 3rem 1.5rem;
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+  }
+
+  .empty-title {
+    font-size: 1.25rem;
+  }
+
+  .empty-description {
+    font-size: 0.875rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .dashboard-header,
+  .stats-section,
+  .search-section,
+  .jobs-section {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
+  }
+
+  .dashboard-title {
+    font-size: 1.375rem;
+  }
+
+  .add-job-btn .btn-text {
+    display: none;
+  }
+
+  .add-job-btn .btn-icon {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+
+  .stat-card {
+    padding: 1rem;
+  }
+
+  .job-card {
+    padding: 0.875rem;
+  }
+
+  .job-footer-actions {
+    flex-direction: column;
+  }
+
+  .edit-btn,
+  .delete-btn {
+    width: 100%;
   }
 }
 

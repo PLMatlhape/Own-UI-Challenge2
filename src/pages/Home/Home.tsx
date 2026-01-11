@@ -383,7 +383,7 @@ const Home: React.FC<HomeProps> = ({ user }) => {
               className="add-job-btn primary-gradient"
             >
               <span className="btn-icon">+</span>
-              Add New Job
+              <span className="btn-text">Add New Job</span>
             </Button>
           </div>
         </div>

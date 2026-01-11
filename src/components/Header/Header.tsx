@@ -43,6 +43,15 @@ const Header: React.FC<HeaderProps> = ({ isAuthenticated, onLogout }) => {
             <span></span>
           </button>
           
+          {/* Mobile Menu Overlay */}
+          {isMobileMenuOpen && (
+            <div 
+              className="mobile-overlay" 
+              onClick={closeMobileMenu}
+              aria-hidden="true"
+            />
+          )}
+          
           <nav className={`header-nav ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
             <Link to="/" className="nav-link home-link" onClick={closeMobileMenu}>
               <Button variant="ghost" size="sm">
